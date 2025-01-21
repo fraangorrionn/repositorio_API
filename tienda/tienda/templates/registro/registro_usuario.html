@@ -1,0 +1,27 @@
+{% extends "principal.html" %}
+
+{% block title %}Registro de Usuario{% endblock %}
+
+{% block contenido %}
+<div class="container mt-5">
+    <h1>Registro de Usuario</h1>
+
+    {% if formulario.errors %}
+        <div class="alert alert-danger">
+            <ul>
+                {% for field, errors in formulario.errors.items %}
+                    {% for error in errors %}
+                        <li>{{ field }}: {{ error }}</li>
+                    {% endfor %}
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+
+    <form method="post" novalidate>
+        {% csrf_token %}
+        {{ formulario.as_p }}
+        <button type="submit" class="btn btn-primary">Registrarse</button>
+    </form>
+</div>
+{% endblock %}

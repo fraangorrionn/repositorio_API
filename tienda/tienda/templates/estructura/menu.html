@@ -1,0 +1,13 @@
+{% load static %}
+<div class="dropdown">
+
+    <!-- Botón para abrir/cerrar el menú -->
+    <button class="dropbtn" id="menuButton">
+        <i class="fa-solid fa-bars"></i> Menú
+    </button>
+
+    <!-- Contenido del menú -->
+    <ul class="dropdown-content" id="menuDropdown">
+        <li><a href="{% url 'index' %}"><i class="fa-solid fa-house"></i> Inicio</a></li>
+    </ul>    
+</div>

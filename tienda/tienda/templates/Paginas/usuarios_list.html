@@ -1,0 +1,36 @@
+{% extends "principal.html" %}
+
+{% block contenido %}
+<div class="container">
+    <h1>Lista de Usuarios</h1>
+    {% if not perms.tienda.view_usuario %}
+        <p>No tienes permisos para acceder a esta sección. Contacta al administrador si necesitas acceso.</p>
+    {% else %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Correo</th>
+                    <th>Dirección</th>
+                    <th>Teléfono</th>
+                    <th>Tarjeta</th>
+                    <th>Productos Favoritos</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for usuario in usuarios %}
+                <tr>
+                    <td colspan="6">
+                        {% include 'Listas/usuario/usuarios.html' %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" style="text-align: center;">No hay usuarios registrados.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+</div>
+{% endblock %}
