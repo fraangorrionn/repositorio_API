@@ -15,6 +15,7 @@ def index(request):
 from django.http import HttpResponse
 
 def orden_lista(request):
+    headers = {'Authorization': 'Bearer 1Pl2Q1aQEqleeVeghHT6aQQHXvQm8B'} 
     try:
         # Realizar la solicitud GET a la API
         response = requests.get('http://127.0.0.1:8000/api/v1/')
