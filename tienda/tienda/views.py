@@ -12,26 +12,31 @@ from pathlib import Path
 # Create your views here.
 def index(request):
     return render(request, 'index.html')
-
-def orden_lista(request):
-    headers = {'Authorization': 'Bearer 1Pl2Q1aQEqleeVeghHT6aQQHXvQm8B'} 
-    try:
-        # Realizar la solicitud GET a la API
-        response = requests.get('http://127.0.0.1:8000/api/v1/')
-        
-        # Verificar el código de estado HTTP
-        if response.status_code != 200:
-            return HttpResponse(f"Error: La API devolvió el código {response.status_code}", status=response.status_code)
-
-        # Intentar decodificar JSON
-        try:
-            ordenes = response.json()
-        except ValueError:
-            return HttpResponse("Error: La respuesta de la API no es JSON válido.", status=500)
-
-        # Renderizar la plantilla con los datos
-        return render(request, 'api/lista_api.html', {"orden_mostrar": ordenes})
     
-    except requests.exceptions.RequestException as e:
-        # Manejar errores de conexión
-        return HttpResponse(f"Error al conectar con la API: {e}", status=500)
+def orden_lista(request):
+    headers = {'Authorization': 'Bearer '+request.session["token"]} 
+    print(headers)
+    response = requests.get('http://127.0.0.1:8000/api/v1/orden',headers=headers)
+    ordenes = response.json()
+    return render(request, 'api/orden_api.html',{"orden_mostrar": ordenes})
+
+def producto_lista(request):
+    headers = {'Authorization': 'Bearer '+request.session["token"]} 
+    print(headers)
+    response = requests.get('http://127.0.0.1:8000/api/v1/producto',headers=headers)
+    productos = response.json()
+    return render(request, 'api/producto_api.html',{"producto_mostrar": productos})
+
+def usuario_lista(request):
+    headers = {'Authorization': 'Bearer '+request.session["token"]} 
+    print(headers)
+    response = requests.get('http://127.0.0.1:8000/api/v1/orden',headers=headers)
+    usuarios = response.json()
+    return render(request, 'api/usuario_api.html',{"usuario_mostrar": usuarios})
+
+#Páginas de Error
+def mi_error_404(request,exception=None):
+    return render(request, 'errores/404.html',None,None,404)
+
+def mi_error_500(request,exception=None):
+    return render(request, 'errores/500.html',None,None,500)
