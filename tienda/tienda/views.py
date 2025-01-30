@@ -3,7 +3,7 @@ from django.contrib import messages
 
 import json
 from requests.exceptions import HTTPError
-
+from django.http import HttpResponse
 import requests
 
 import os
@@ -12,7 +12,6 @@ from pathlib import Path
 # Create your views here.
 def index(request):
     return render(request, 'index.html')
-from django.http import HttpResponse
 
 def orden_lista(request):
     headers = {'Authorization': 'Bearer 1Pl2Q1aQEqleeVeghHT6aQQHXvQm8B'} 
