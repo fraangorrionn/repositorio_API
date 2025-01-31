@@ -20,6 +20,7 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('',include("tienda.urls")),
+    path("__debug__/", include("debug_toolbar.urls")),
 ]
 
 from django.conf.urls import handler404,handler500

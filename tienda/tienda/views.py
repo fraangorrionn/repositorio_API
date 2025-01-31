@@ -12,27 +12,23 @@ from pathlib import Path
 # Create your views here.
 def index(request):
     return render(request, 'index.html')
-    
-def orden_lista(request):
-    headers = {'Authorization': 'Bearer '+request.session["token"]} 
-    print(headers)
-    response = requests.get('http://127.0.0.1:8000/api/v1/orden',headers=headers)
-    ordenes = response.json()
-    return render(request, 'api/orden_api.html',{"orden_mostrar": ordenes})
 
-def producto_lista(request):
-    headers = {'Authorization': 'Bearer '+request.session["token"]} 
-    print(headers)
-    response = requests.get('http://127.0.0.1:8000/api/v1/producto',headers=headers)
+
+def producto_listar_api(request):
+    headers = {'Authorization': 'Bearer TU_ACCESS_TOKEN'}
+    response = requests.get('http://127.0.0.1:8081/api/v1/Producto', headers=headers)
+
     productos = response.json()
-    return render(request, 'api/producto_api.html',{"producto_mostrar": productos})
+    return render(request, 'api/producto_list.html', {"productos": productos})
 
-def usuario_lista(request):
-    headers = {'Authorization': 'Bearer '+request.session["token"]} 
-    print(headers)
-    response = requests.get('http://127.0.0.1:8000/api/v1/orden',headers=headers)
-    usuarios = response.json()
-    return render(request, 'api/usuario_api.html',{"usuario_mostrar": usuarios})
+    
+def producto_detalle_api(request):
+    headers = {'Authorization': 'Bearer TU_ACCESS_TOKEN'}
+    response = requests.get('http://127.0.0.1:8081/api/v1/ProductoDetallado', headers=headers)
+
+    productos = response.json()
+    return render(request, 'api/producto_list_detallado.html', {"productos": productos})
+
 
 #Páginas de Error
 def mi_error_404(request,exception=None):
