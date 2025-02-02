@@ -1,4 +1,8 @@
 # repositorio_API
+python3 -m pip install django # instalar django
+python3 -m pip install django-seed # instalar seed
+python3 -m pip install djangorestframework # isntalar restframework
+
 
 python3 -m venv myvenv
 source myvenv/bin/activate
