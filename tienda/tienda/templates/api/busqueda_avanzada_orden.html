@@ -1,0 +1,37 @@
+{% extends "principal.html" %}
+
+{% block content %}
+    <div class="container mt-4">
+        <h2>Búsqueda Avanzada de Órdenes</h2>
+        <form method="GET">
+            {{ formulario.as_p }}
+            <button type="submit" class="btn btn-primary">Buscar</button>
+        </form>
+
+        {% if ordenes %}
+            <h3>Resultados:</h3>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Usuario</th>
+                        <th>Estado</th>
+                        <th>Total</th>
+                        <th>Fecha</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for orden in ordenes %}
+                    <tr>
+                        <td>{{ orden.id }}</td>
+                        <td>{{ orden.usuario }}</td>
+                        <td>{{ orden.estado }}</td>
+                        <td>{{ orden.total }}€</td>
+                        <td>{{ orden.fecha_orden }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+    </div>
+{% endblock %}

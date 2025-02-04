@@ -1,0 +1,33 @@
+{% extends "principal.html" %}
+
+{% block content %}
+    <div class="container mt-4">
+        <h2>Búsqueda Avanzada de Productos</h2>
+        <form method="GET">
+            {{ formulario.as_p }}
+            <button type="submit" class="btn btn-primary">Buscar</button>
+        </form>
+
+        {% if productos %}
+            <h3>Resultados:</h3>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Tipo</th>
+                        <th>Precio</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for producto in productos %}
+                    <tr>
+                        <td>{{ producto.nombre }}</td>
+                        <td>{{ producto.tipo }}</td>
+                        <td>{{ producto.precio }}€</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+    </div>
+{% endblock %}

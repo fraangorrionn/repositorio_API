@@ -1,0 +1,33 @@
+{% extends "principal.html" %}
+
+{% block content %}
+    <div class="container mt-4">
+        <h2>Búsqueda Avanzada de Proveedores</h2>
+        <form method="GET">
+            {{ formulario.as_p }}
+            <button type="submit" class="btn btn-primary">Buscar</button>
+        </form>
+
+        {% if proveedores %}
+            <h3>Resultados:</h3>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Contacto</th>
+                        <th>Teléfono</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for proveedor in proveedores %}
+                    <tr>
+                        <td>{{ proveedor.nombre }}</td>
+                        <td>{{ proveedor.contacto }}</td>
+                        <td>{{ proveedor.telefono }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+    </div>
+{% endblock %}

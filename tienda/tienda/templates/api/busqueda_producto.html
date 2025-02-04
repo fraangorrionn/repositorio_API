@@ -1,0 +1,20 @@
+{% extends "principal.html" %}
+
+{% block content %}
+    <div class="container mt-4">
+        <h2>Búsqueda Simple de Producto</h2>
+        <form method="GET">
+            {{ formulario.as_p }}
+            <button type="submit" class="btn btn-primary">Buscar</button>
+        </form>
+
+        {% if productos %}
+            <h3>Resultados:</h3>
+            <ul>
+                {% for producto in productos %}
+                    <li>{{ producto.nombre }} - {{ producto.precio }}€</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+{% endblock %}
