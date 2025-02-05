@@ -3,18 +3,28 @@
 {% block content %}
     <div class="container mt-4">
         <h2>Búsqueda Simple de Producto</h2>
-        <form method="GET">
-            {{ formulario.as_p }}
+        
+        <!-- Formulario para búsqueda -->
+        <form method="GET" action="{% url 'producto_busqueda_simple' %}">
+            <div class="mb-3">
+                {{ formulario.textoBusqueda.label_tag }}
+                {{ formulario.textoBusqueda }}
+            </div>
             <button type="submit" class="btn btn-primary">Buscar</button>
         </form>
 
+        <!-- Mostrar resultados si existen -->
         {% if productos %}
-            <h3>Resultados:</h3>
-            <ul>
+            <h3 class="mt-4">Resultados:</h3>
+            <ul class="list-group">
                 {% for producto in productos %}
-                    <li>{{ producto.nombre }} - {{ producto.precio }}€</li>
+                    <li class="list-group-item">
+                        <strong>{{ producto.nombre }}</strong> - {{ producto.precio }}€
+                    </li>
                 {% endfor %}
             </ul>
+        {% elif formulario.is_bound %}
+            <p class="mt-3 text-danger">No se encontraron resultados.</p>
         {% endif %}
     </div>
 {% endblock %}

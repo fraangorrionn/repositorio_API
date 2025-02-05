@@ -83,7 +83,7 @@ def producto_busqueda_simple(request):
     if formulario.is_valid():
         helper = Helper(request)
         productos = helper.obtener_productos({'search': formulario.cleaned_data['textoBusqueda']})
-        return render(request, 'productos/lista.html', {"productos": productos})
+        return render(request, 'api/lista_productos_api.html', {"productos": productos})
 
     return redirect("index")
 
@@ -95,9 +95,9 @@ def producto_busqueda_avanzada(request):
     if formulario.is_valid():
         helper = Helper(request)
         productos = helper.obtener_productos(formulario.cleaned_data)
-        return render(request, 'productos/lista.html', {"productos": productos})
+        return render(request, 'api/lista_productos_api.html', {"productos": productos})
 
-    return render(request, 'productos/busqueda.html', {"formulario": formulario})
+    return render(request, 'api/busqueda_avanzada_producto.html', {"formulario": formulario})
 
 
 # ----------------- Búsqueda Avanzada de Órdenes ----------------- #
@@ -107,9 +107,9 @@ def orden_busqueda_avanzada(request):
     if formulario.is_valid():
         helper = Helper(request)
         ordenes = helper.obtener_ordenes(formulario.cleaned_data)
-        return render(request, 'ordenes/lista.html', {"ordenes": ordenes})
+        return render(request, 'api/lista_ordenes_api.html', {"ordenes": ordenes})
 
-    return render(request, 'ordenes/busqueda.html', {"formulario": formulario})
+    return render(request, 'api/busqueda_avanzada_orden.html', {"formulario": formulario})
 
 
 # ----------------- Búsqueda Avanzada de Proveedores ----------------- #
@@ -119,9 +119,9 @@ def proveedor_busqueda_avanzada(request):
     if formulario.is_valid():
         helper = Helper(request)
         proveedores = helper.obtener_proveedores(formulario.cleaned_data)
-        return render(request, 'proveedores/lista.html', {"proveedores": proveedores})
+        return render(request, 'api/lista_proveedor_api.html', {"proveedores": proveedores})
 
-    return render(request, 'proveedores/busqueda.html', {"formulario": formulario})
+    return render(request, 'api/busqueda_avanzada_proveedor.html', {"formulario": formulario})
 
 
 # Páginas de error personalizadas
