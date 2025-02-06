@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'debug_toolbar',
     'django_bootstrap5',
     'django_bootstrap_icons',
+    'django_extensions',
 ]
 
 
@@ -60,10 +61,11 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'mysite.urls'
 
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / "templates", BASE_DIR / "tienda/templates"],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -150,3 +152,7 @@ REST_FRAMEWORK = {
 }
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+SESSION_ENGINE = "django.contrib.sessions.backends.db"
+SESSION_COOKIE_AGE = 86400  # 1 día de sesión activa
+SESSION_SAVE_EVERY_REQUEST = True  # Guarda la sesión en cada request
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False  # No expira al cerrar el navegador

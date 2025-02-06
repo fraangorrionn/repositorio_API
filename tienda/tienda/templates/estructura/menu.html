@@ -1,6 +1,5 @@
 {% load static %}
 <div class="dropdown">
-
     <!-- Botón para abrir/cerrar el menú -->
     <button class="dropbtn" id="menuButton">
         <i class="fa-solid fa-bars"></i> Menú
@@ -9,5 +8,8 @@
     <!-- Contenido del menú -->
     <ul class="dropdown-content" id="menuDropdown">
         <li><a href="{% url 'index' %}"><i class="fa-solid fa-house"></i> Inicio</a></li>
+        <li><a href="{% url 'producto_listar_api' %}"><i class="fa-solid fa-box"></i> Productos</a></li>
+        <li><a href="{% url 'ordenes_listar_api' %}"><i class="fa-solid fa-list"></i> Órdenes</a></li>
+        <li><a href="{% url 'proveedores_listar_api' %}"><i class="fa-solid fa-truck"></i> Proveedores</a></li>
     </ul>    
 </div>

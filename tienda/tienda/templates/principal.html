@@ -35,6 +35,12 @@
                             No has iniciado sesión. 
                         </p>
                     {% endif %}
+                    {% if request.session.access_token %}
+                        <a href="{% url 'logout' %}" class="btn btn-danger">Cerrar Sesión</a>
+                    {% else %}
+                        <a href="{% url 'login' %}" class="btn btn-primary">Iniciar Sesión</a>
+                    {% endif %}
+
                 </nav>
                 
                 <!-- Menú principal y otros elementos de cabecera -->

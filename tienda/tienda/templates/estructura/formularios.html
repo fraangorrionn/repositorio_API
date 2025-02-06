@@ -1,7 +1,14 @@
 {% load static %}
+
+
 <div class="dropdown">
     <button class="dropbtn" id="formularioButton">
         <i class="fa-solid fa-bars"></i> Formularios
     </button>
+    <ul class="dropdown-content" id="formularioDropdown">
+        <li><a href="{% url 'producto_busqueda_simple' %}"><i class="fa-solid fa-search"></i> Búsqueda de Productos simple</a></li>
+        <li><a href="{% url 'producto_busqueda_avanzada' %}"><i class="fa-solid fa-search"></i> Búsqueda de Productos avanzada</a></li>
+        <li><a href="{% url 'orden_busqueda_avanzada' %}"><i class="fa-solid fa-list"></i> Búsqueda de Órdenes avanzada</a></li>
+        <li><a href="{% url 'proveedor_busqueda_avanzada' %}"><i class="fa-solid fa-truck"></i> Búsqueda de Proveedores avanzada</a></li>
+    </ul>
 </div>
-
