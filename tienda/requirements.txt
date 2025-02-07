@@ -29,3 +29,4 @@ djangorestframework~=3.14.0
 requests~=2.31.0
 django-oauth-toolkit~=3.0.1
 django-cors-headers~=4.3.1
+django-environ~=0.11.2

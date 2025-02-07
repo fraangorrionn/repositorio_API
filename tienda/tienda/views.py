@@ -1,12 +1,30 @@
-from django.shortcuts import render, redirect
-from django.contrib import messages
-import requests
+from django.shortcuts import render,redirect
 from .forms import *
-from .helper import Helper
+from django.contrib import messages
+import json
 from requests.exceptions import HTTPError
+import requests
+from pathlib import Path
+import xml.etree.ElementTree as ET
+
+API_URL = "https/fraangorrionn.pythonsnywhere"
+
+import environ
+import os
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'),True)
+env = environ.Env()
+
 
 def index(request):
     return render(request, 'index.html')
+
+def crear_cabecera():
+    return {
+        'Authorization': 'Bearer '+env("Admin"),
+        "Content-Type": "application/json"
+        }
 
 def login_view(request):
     """
@@ -99,15 +117,26 @@ def proveedores_listar_api(request):
 
 # ----------------- Búsqueda Simple ----------------- #
 def producto_busqueda_simple(request):
-    formulario = BusquedaProductoForm(request.GET)
+    producto = []
+    if request.GET:
+        formulario = BusquedaProductoForm(request.GET)
+        if formulario.is_valid():
+            headers = crear_cabecera()
+            response = requests.get(
+                'http://127.0.0.1:8000/api/v1/productos/busqueda_simple',
+                headers=headers,
+                params={'textoBusqueda':formulario.data.get("textoBusqueda")}
+            )
+            producto = response.json()
+            return render(request, 'api/busqueda_producto_simple.html',{"producto":producto,"formulario": formulario})
+        if("HTTP_REFERER" in request.META):
+            return redirect(request.META["HTTP_REFERER"])
+        else:
+            return redirect("index")
 
-    if formulario.is_valid():
-        helper = Helper(request)
-        productos = helper.obtener_productos({'search': formulario.cleaned_data['textoBusqueda']})
-        return render(request, 'api/lista_productos_api.html', {"productos": productos})
-
-    return render(request, 'api/busqueda_producto_simple.html', {"formulario": formulario})
-
+    else:
+        formulario = BusquedaProductoForm()
+    return render(request, 'api/busqueda_producto_simple.html',{"formulario": formulario})
 
 # ----------------- Búsqueda Avanzada de Producto ----------------- #
 def producto_busqueda_avanzada(request):

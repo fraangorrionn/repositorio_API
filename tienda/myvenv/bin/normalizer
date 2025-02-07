@@ -1,5 +1,5 @@
 #!/bin/sh
-'''exec' "/home/fraangorrionn/Escritorio/ENTORNO SERVIDOR/repositorio_API/tienda/myvenv/bin/python3" "$0" "$@"
+'''exec' "/home/alumnado/Escritorio/ENTORNO SERVIDOR/repositorio_API/tienda/myvenv/bin/python" "$0" "$@"
 ' '''
 # -*- coding: utf-8 -*-
 import re
