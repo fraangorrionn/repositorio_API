@@ -1,0 +1,13 @@
+{% extends "principal.html" %}
+
+{% block title %}Error{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="alert alert-warning text-center">
+        <h2>⚠️ Ocurrió un error</h2>
+        <p>{{ error|default:"Ha ocurrido un problema inesperado. Por favor, inténtalo más tarde." }}</p>
+        <a href="{% url 'index' %}" class="btn btn-primary">Volver al inicio</a>
+    </div>
+</div>
+{% endblock %}

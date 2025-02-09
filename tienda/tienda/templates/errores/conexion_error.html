@@ -1,0 +1,13 @@
+{% extends "principal.html" %}
+
+{% block title %}Error de Conexión{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="alert alert-danger text-center">
+        <h2>❌ Error de Conexión</h2>
+        <p>No se pudo establecer conexión con el servidor. Por favor, revisa tu conexión a internet e intenta nuevamente.</p>
+        <a href="{% url 'index' %}" class="btn btn-primary">Volver al inicio</a>
+    </div>
+</div>
+{% endblock %}

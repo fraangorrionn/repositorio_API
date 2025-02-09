@@ -6,9 +6,7 @@ from requests.exceptions import HTTPError
 import requests
 from pathlib import Path
 import xml.etree.ElementTree as ET
-
-API_URL = "https/fraangorrionn.pythonsnywhere"
-
+from .utils import manejar_errores_api, manejar_excepciones_api 
 import environ
 import os
 
@@ -16,161 +14,259 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 environ.Env.read_env(os.path.join(BASE_DIR, '.env'),True)
 env = environ.Env()
 
+# PREGUNTA 1: ¿Qué pasaría si cambia la versión de la API?
+# En lugar de escribir manualmente la URL en cada vista, usamos una variable global.
+# Si la API cambia a `v2`, solo debemos actualizar esta variable y no modificar todo el código.
+BASE_API_URL = "https://fraangorrionn.pythonanywhere.com/api/v1/"
+BASE_API_URL_local = "http://127.0.0.1:8000/api/v1/"
 
 def index(request):
     return render(request, 'index.html')
 
-def crear_cabecera():
-    return {
-        'Authorization': 'Bearer '+env("Admin"),
-        "Content-Type": "application/json"
-        }
-
-def login_view(request):
-    """
-    Vista para autenticar usuarios en la API REST y guardar el token en la sesión.
-    """
-    if request.method == "POST":
-        username = request.POST.get("username")
-        password = request.POST.get("password")
-        
-        response = requests.post("http://127.0.0.1:8000/api/v1/token/", data={"username": username, "password": password})
-        
-        if response.status_code == 200:
-            tokens = response.json()
-            request.session["access_token"] = tokens["access"]
-            request.session["refresh_token"] = tokens["refresh"]
-            print("🔹 Token almacenado:", request.session["access_token"])  # DEBUG
-            return redirect("index")
-        else:
-            return render(request, "api/login.html", {"error": "Credenciales inválidas"})
-
-    return render(request, "api/login.html")
-
-
-# Listado de productos desde la API
+# ------------------ Listado de Productos ------------------ #
 def producto_listar_api(request):
     """
-    Devuelve el listado de todos los productos.
+    Devuelve el listado de todos los productos con autenticación OAUTH 2 según el rol del usuario.
     """
-    token = request.session.get('access_token', None)
-    headers = {'Authorization': f'Bearer {token}'} if token else {}
-
-    response = requests.get('http://127.0.0.1:8001/productos/', headers=headers)
-
-    if response.status_code == 200:
-        productos = response.json()
+    if not request.user.is_anonymous:
+        if request.user.rol == 1:  # Admin
+            headers = {'Authorization': f'Bearer {env("Admin")}'}
+        elif request.user.rol == 2:  # Cliente
+            headers = {'Authorization': f'Bearer {env("Cliente")}'}
+        else:  # Gerente
+            headers = {'Authorization': f'Bearer {env("Gerente")}'}
     else:
-        productos = []  # Si la API falla, devolver lista vacía
+        headers = {'Authorization': f'Bearer {env("Cliente")}'}
+
+    response = requests.get(BASE_API_URL + "productos/", headers=headers)
+
+    # PREGUNTA 2: ¿Qué pasa si la API cambia de JSON a XML?
+    # En lugar de asumir siempre JSON, detectamos el formato de respuesta y lo procesamos adecuadamente.
+    content_type = response.headers.get("Content-Type", "")
+    if "application/json" in content_type:
+        productos = response.json()
+    elif "application/xml" in content_type:
+        productos = ET.fromstring(response.text)  # Convierte XML a objeto
+    else:
+        productos = response.text  # Si el formato es desconocido, tratarlo como texto plano
 
     return render(request, 'api/lista_productos_api.html', {"productos": productos})
 
 
+# ------------------ Detalle de un Producto ------------------ #
 def producto_detalle_api(request, id):
     """
-    Devuelve el detalle de un producto específico por su ID.
+    Devuelve el detalle de un producto específico por su ID con autenticación OAUTH 2 según el rol del usuario.
     """
-    token = request.session.get('access_token', None)
-    headers = {'Authorization': f'Bearer {token}'} if token else {}
-
-    response = requests.get(f'http://127.0.0.1:8001/productos/detallados/{id}/', headers=headers)
-
-    if response.status_code == 200:
-        producto = response.json()
+    if not request.user.is_anonymous:
+        if request.user.rol == 1:  # Admin
+            headers = {'Authorization': f'Bearer {env("Admin")}'}
+        elif request.user.rol == 2:  # Cliente
+            headers = {'Authorization': f'Bearer {env("Cliente")}'}
+        else:  # Gerente
+            headers = {'Authorization': f'Bearer {env("Gerente")}'}
     else:
-        producto = None  # Si la API falla, no mostrar producto
+        headers = {'Authorization': f'Bearer {env("Cliente")}'}
 
+    response = requests.get(BASE_API_URL + f"productos/detallados/{id}/", headers=headers)
+
+    producto = response.json() if response.status_code == 200 else None
+    
     return render(request, 'api/lista_productos_detallada_api.html', {"producto": producto})
 
+
+# ------------------ Listado de Órdenes ------------------ #
 def ordenes_listar_api(request):
     """
-    Devuelve el listado de todas las órdenes con autenticación OAUTH 2.
+    Devuelve el listado de todas las órdenes con autenticación OAUTH 2 según el rol del usuario.
     """
-    token = request.session.get('access_token', None)
-    headers = {'Authorization': f'Bearer {token}'} if token else {}
-
-    response = requests.get('http://127.0.0.1:8001/ordenes/', headers=headers)
-
-    if response.status_code == 200:
-        ordenes = response.json()
+    if not request.user.is_anonymous:
+        if request.user.rol == 1:  # Admin
+            headers = {'Authorization': f'Bearer {env("Admin")}'}
+        elif request.user.rol == 2:  # Cliente
+            headers = {'Authorization': f'Bearer {env("Cliente")}'}
+        else:  # Gerente
+            headers = {'Authorization': f'Bearer {env("Gerente")}'}
     else:
-        ordenes = []
+        headers = {'Authorization': f'Bearer {env("Cliente")}'}
+
+    response = requests.get(BASE_API_URL + "ordenes/", headers=headers)
+
+    ordenes = response.json() if response.status_code == 200 else []
     
     return render(request, 'api/orden_list.html', {"ordenes": ordenes})
 
 
+# ------------------ Listado de Proveedores ------------------ #
 def proveedores_listar_api(request):
     """
-    Devuelve el listado de todos los proveedores con autenticación OAUTH 2.
+    Devuelve el listado de todos los proveedores con autenticación OAUTH 2 según el rol del usuario.
     """
-    token = request.session.get('access_token', None)
-    headers = {'Authorization': f'Bearer {token}'} if token else {}
-
-    response = requests.get('http://127.0.0.1:8001/proveedores/', headers=headers)
-
-    if response.status_code == 200:
-        proveedores = response.json()
+    if not request.user.is_anonymous:
+        if request.user.rol == 1:  # Admin
+            headers = {'Authorization': f'Bearer {env("Admin")}'}
+        elif request.user.rol == 2:  # Cliente
+            headers = {'Authorization': f'Bearer {env("Cliente")}'}
+        else:  # Gerente
+            headers = {'Authorization': f'Bearer {env("Gerente")}'}
     else:
-        proveedores = []
+        headers = {'Authorization': f'Bearer {env("Cliente")}'}
+
+    response = requests.get(BASE_API_URL + "proveedores/", headers=headers)
+
+    proveedores = response.json() if response.status_code == 200 else []
     
     return render(request, 'api/proveedor_list.html', {"proveedores": proveedores})
 
-# ----------------- Búsqueda Simple ----------------- #
+def crear_cabecera():
+    return {
+        'Authorization': f'Bearer {env("Admin")}',
+        "Content-Type": "application/json"
+    }
+
+# PREGUNTA 3: ¿Siempre debemos tratar los errores en cada petición?
+# No, por eficiencia, es mejor tener funciones centralizadas como `manejar_errores_api` y `manejar_excepciones_api`
+# para no repetir código innecesario y evitar errores en cada vista.
+
+# ----------------- Búsqueda Simple de Producto ----------------- #
 def producto_busqueda_simple(request):
-    producto = []
     if request.GET:
         formulario = BusquedaProductoForm(request.GET)
         if formulario.is_valid():
-            headers = crear_cabecera()
-            response = requests.get(
-                'http://127.0.0.1:8000/api/v1/productos/busqueda_simple',
-                headers=headers,
-                params={'textoBusqueda':formulario.data.get("textoBusqueda")}
-            )
-            producto = response.json()
-            return render(request, 'api/busqueda_producto_simple.html',{"producto":producto,"formulario": formulario})
-        if("HTTP_REFERER" in request.META):
-            return redirect(request.META["HTTP_REFERER"])
-        else:
-            return redirect("index")
+            try:
+                headers = crear_cabecera()
+                response = requests.get(
+                    BASE_API_URL + 'productos/busqueda/',
+                    headers=headers,
+                    params={'search': formulario.cleaned_data.get("textoBusqueda")}
+                )
 
-    else:
-        formulario = BusquedaProductoForm()
-    return render(request, 'api/busqueda_producto_simple.html',{"formulario": formulario})
+                # ✅ PREGUNTA 2: Manejo de múltiples formatos (JSON, XML, etc.)
+                content_type = response.headers.get("Content-Type", "")
+                if "application/json" in content_type:
+                    productos = response.json()
+                elif "application/xml" in content_type:
+                    productos = ET.fromstring(response.text)
+                else:
+                    productos = response.text
+
+                if response.status_code == requests.codes.ok:
+                    return render(request, 'api/busqueda_producto_simple.html', {"productos": productos, "formulario": formulario})
+                else:
+                    return manejar_errores_api(response, request, formulario, "api/busqueda_producto_simple.html")
+
+            except Exception as err:
+                return manejar_excepciones_api(err, request)
+
+        return redirect(request.META.get("HTTP_REFERER", "index"))
+
+    formulario = BusquedaProductoForm()
+    return render(request, 'api/busqueda_producto_simple.html', {"formulario": formulario})
+
+
 
 # ----------------- Búsqueda Avanzada de Producto ----------------- #
 def producto_busqueda_avanzada(request):
-    formulario = BusquedaAvanzadaProductoForm(request.GET)
+    if request.GET:
+        formulario = BusquedaAvanzadaProductoForm(request.GET)
+        if formulario.is_valid():
+            try:
+                headers = crear_cabecera()
+                response = requests.get(
+                    BASE_API_URL + 'productos/busqueda-avanzada/',
+                    headers=headers,
+                    params=formulario.cleaned_data
+                )
 
-    if formulario.is_valid():
-        helper = Helper(request)
-        productos = helper.obtener_productos(formulario.cleaned_data)
-        return render(request, 'api/lista_productos_api.html', {"productos": productos})
+                content_type = response.headers.get("Content-Type", "")
+                if "application/json" in content_type:
+                    productos = response.json()
+                elif "application/xml" in content_type:
+                    productos = ET.fromstring(response.text)
+                else:
+                    productos = response.text
 
+                if response.status_code == requests.codes.ok:
+                    return render(request, 'api/lista_productos_api.html', {"productos": productos, "formulario": formulario})
+                else:
+                    return manejar_errores_api(response, request, formulario, "api/busqueda_avanzada_producto.html")
+
+            except Exception as err:
+                return manejar_excepciones_api(err, request)
+
+        return redirect(request.META.get("HTTP_REFERER", "index"))
+
+    formulario = BusquedaAvanzadaProductoForm()
     return render(request, 'api/busqueda_avanzada_producto.html', {"formulario": formulario})
 
 
 # ----------------- Búsqueda Avanzada de Órdenes ----------------- #
 def orden_busqueda_avanzada(request):
-    formulario = BusquedaAvanzadaOrdenForm(request.GET)
+    if request.GET:
+        formulario = BusquedaAvanzadaOrdenForm(request.GET)
+        if formulario.is_valid():
+            try:
+                headers = crear_cabecera()
+                response = requests.get(
+                    BASE_API_URL + 'ordenes/busqueda-avanzada/',
+                    headers=headers,
+                    params=formulario.cleaned_data
+                )
 
-    if formulario.is_valid():
-        helper = Helper(request)
-        ordenes = helper.obtener_ordenes(formulario.cleaned_data)
-        return render(request, 'api/lista_ordenes_api.html', {"ordenes": ordenes})
+                content_type = response.headers.get("Content-Type", "")
+                if "application/json" in content_type:
+                    ordenes = response.json()
+                elif "application/xml" in content_type:
+                    ordenes = ET.fromstring(response.text)
+                else:
+                    ordenes = response.text
 
+                if response.status_code == requests.codes.ok:
+                    return render(request, 'api/lista_ordenes_api.html', {"ordenes": ordenes, "formulario": formulario})
+                else:
+                    return manejar_errores_api(response, request, formulario, "api/busqueda_avanzada_orden.html")
+
+            except Exception as err:
+                return manejar_excepciones_api(err, request)
+
+        return redirect(request.META.get("HTTP_REFERER", "index"))
+
+    formulario = BusquedaAvanzadaOrdenForm()
     return render(request, 'api/busqueda_avanzada_orden.html', {"formulario": formulario})
 
 
 # ----------------- Búsqueda Avanzada de Proveedores ----------------- #
 def proveedor_busqueda_avanzada(request):
-    formulario = BusquedaAvanzadaProveedorForm(request.GET)
+    if request.GET:
+        formulario = BusquedaAvanzadaProveedorForm(request.GET)
+        if formulario.is_valid():
+            try:
+                headers = crear_cabecera()
+                response = requests.get(
+                    BASE_API_URL + 'proveedores/busqueda-avanzada/',
+                    headers=headers,
+                    params=formulario.cleaned_data
+                )
 
-    if formulario.is_valid():
-        helper = Helper(request)
-        proveedores = helper.obtener_proveedores(formulario.cleaned_data)
-        return render(request, 'api/lista_proveedores_api.html', {"proveedores": proveedores})
+                content_type = response.headers.get("Content-Type", "")
+                if "application/json" in content_type:
+                    proveedores = response.json()
+                elif "application/xml" in content_type:
+                    proveedores = ET.fromstring(response.text)
+                else:
+                    proveedores = response.text
 
+                if response.status_code == requests.codes.ok:
+                    return render(request, 'api/lista_proveedores_api.html', {"proveedores": proveedores, "formulario": formulario})
+                else:
+                    return manejar_errores_api(response, request, formulario, "api/busqueda_avanzada_proveedor.html")
+
+            except Exception as err:
+                return manejar_excepciones_api(err, request)
+
+        return redirect(request.META.get("HTTP_REFERER", "index"))
+
+    formulario = BusquedaAvanzadaProveedorForm()
     return render(request, 'api/busqueda_avanzada_proveedor.html', {"formulario": formulario})
 
 

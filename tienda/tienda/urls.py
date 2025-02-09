@@ -2,13 +2,12 @@ from django.urls import path
 from .views import (
     index, producto_listar_api, producto_detalle_api, 
     ordenes_listar_api, proveedores_listar_api, 
-    producto_busqueda_avanzada, login_view, 
+    producto_busqueda_avanzada,
     orden_busqueda_avanzada, proveedor_busqueda_avanzada, producto_busqueda_simple
 )
 
 urlpatterns = [
     path('', index, name='index'),
-    path("login/", login_view, name="login"),
     path('productos/', producto_listar_api, name='producto_listar_api'), 
     path('productos/<int:id>/', producto_detalle_api, name='producto_detalle_api'),
     path('ordenes/', ordenes_listar_api, name='ordenes_listar_api'),

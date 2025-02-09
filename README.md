@@ -22,8 +22,9 @@ python manage.py runserver
 
 git add . git commit -m 'Completado' git push git pull
 
-curl -X 
- "http://0.0.0.0:8000/oauth2/token/" -d "grant_type=password&username=fran&password=2004&client_id=mi_aplicacion&client_secret=mi_clave_secreta"
+curl -X "http://0.0.0.0:8000/oauth2/token/" -d "grant_type=password&username=fran&password=2004&client_id=mi_aplicacion&client_secret=mi_clave_secreta"
 
 clave de sesion: 0v8dnhvueyq27bekllrsk6lll422yes2
-2aDUr50Yu0ajtsaLdHJ9GnWmK9oTzG
+Admin=2aDUr50Yu0ajtsaLdHJ9GnWmK9oTzG
+Gerente=M4fomOApcodhuC9GKTjBCx4iUSOa0J
+Cliente=ymPRtBBixM57xhnZKqA1bhb850e2AA

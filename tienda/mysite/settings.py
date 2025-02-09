@@ -17,9 +17,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
+BASE_DIR = Path(__file__).resolve().parent.parent
 
+import environ
+import os
+
+env = environ.Env()
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-@utt4#!7wk9extvfd4rrk+yu%nbusqc+)jdk^6rvlx8nhg23+v'
+SECRET_KEY = env("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -152,7 +158,3 @@ REST_FRAMEWORK = {
 }
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-SESSION_ENGINE = "django.contrib.sessions.backends.db"
-SESSION_COOKIE_AGE = 86400  # 1 día de sesión activa
-SESSION_SAVE_EVERY_REQUEST = True  # Guarda la sesión en cada request
-SESSION_EXPIRE_AT_BROWSER_CLOSE = False  # No expira al cerrar el navegador
