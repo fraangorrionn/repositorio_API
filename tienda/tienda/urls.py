@@ -1,10 +1,5 @@
 from django.urls import path
-from .views import (
-    index, producto_listar_api, producto_detalle_api, 
-    ordenes_listar_api, proveedores_listar_api, 
-    producto_busqueda_avanzada,
-    orden_busqueda_avanzada, proveedor_busqueda_avanzada, producto_busqueda_simple
-)
+from .views import *
 
 urlpatterns = [
     path('', index, name='index'),
@@ -18,4 +13,16 @@ urlpatterns = [
     path('busqueda-productos-avanzada/', producto_busqueda_avanzada, name='producto_busqueda_avanzada'),
     path('busqueda-ordenes/', orden_busqueda_avanzada, name='orden_busqueda_avanzada'),
     path('busqueda-proveedores/', proveedor_busqueda_avanzada, name='proveedor_busqueda_avanzada'),
+    
+    # POST
+    path('productos/crear/', crear_producto, name='producto_crear_api'),
+    
+    # PUT
+    path('productos/<int:producto_id>/editar/', editar_producto, name='producto_editar_api'),
+
+    # PATCH
+    path('productos/<int:producto_id>/actualizar-nombre/', actualizar_nombre_producto, name='producto_actualizar_nombre_api'),
+    
+    # DELETE
+    path('productos/<int:producto_id>/eliminar/', eliminar_producto, name='producto_eliminar_api'),
 ]
