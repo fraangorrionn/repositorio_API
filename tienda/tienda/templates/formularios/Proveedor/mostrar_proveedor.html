@@ -1,0 +1,22 @@
+{% extends 'principal.html' %}
+
+{% block contenido %}
+<div class="container mt-4">
+    <div class="card shadow-lg p-4 bg-white rounded">
+        <h1 class="display-4 text-primary text-center">🏭 Proveedor: {{ proveedor.nombre }}</h1>
+
+        <div class="col-sm-12 mb-3">
+            {% include "Listas/Proveedor.html" %}
+        </div>
+
+        <div class="text-center mt-4">
+            <a href="{% url 'proveedor_busqueda_avanzada' %}" class="btn btn-secondary">
+                🔙 Volver a la Búsqueda
+            </a>
+            <a href="{% url 'proveedor_listar_api' %}" class="btn btn-warning">
+                📋 Ver la lista completa
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

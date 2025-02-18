@@ -1,0 +1,31 @@
+{% extends 'principal.html' %}
+
+{% block contenido %}
+<div class="container mt-4">
+    <div class="card shadow-lg p-4 bg-white rounded">
+        <h1 class="display-4 text-primary text-center">🛒 Orden ID: {{ orden.id }}</h1>
+        
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert {% if message.tags == 'success' %}alert-success{% elif message.tags == 'error' %}alert-danger{% endif %} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <div class="col-sm-12 mb-3">
+            {% include "Listas/Orden.html" %}
+        </div>
+
+        <div class="text-center mt-4">
+            <a href="{% url 'orden_busqueda_avanzada' %}" class="btn btn-secondary">
+                🔙 Volver a la Búsqueda
+            </a>
+            <a href="{% url 'orden_listar_api' %}" class="btn btn-warning">
+                📋 Ver la lista completa
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

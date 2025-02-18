@@ -1,0 +1,15 @@
+{% extends "Principal.html" %}
+
+{% block contenido %}
+
+{% load django_bootstrap5 %}
+<form action="{% url 'proveedor_editar_api' proveedor.id %}" method="post">
+    {% csrf_token %}
+    
+    {% bootstrap_form formulario %}
+    
+    {% bootstrap_button "Enviar" button_type="submit" button_class="btn-primary" %}
+</form>
+
+{% endblock %}
+

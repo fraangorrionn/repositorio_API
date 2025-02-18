@@ -1,0 +1,55 @@
+{% extends "principal.html" %}
+
+{% block contenido %}
+<div class="container mt-5">
+    <h1 class="text-center">Editar Orden</h1>
+
+    <!-- Mostrar mensajes de error o éxito -->
+    {% if messages %}
+        <div class="mt-4">
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} text-center" role="alert">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <!-- Formulario -->
+    <form method="post" action="">
+        {% csrf_token %}
+        <div class="mb-3">
+            {{ formulario.usuario.label_tag }}
+            {{ formulario.usuario }}
+            {% if formulario.usuario.errors %}
+                <div class="text-danger">{{ formulario.usuario.errors }}</div>
+            {% endif %}
+        </div>
+        <div class="mb-3">
+            {{ formulario.total.label_tag }}
+            {{ formulario.total }}
+            {% if formulario.total.errors %}
+                <div class="text-danger">{{ formulario.total.errors }}</div>
+            {% endif %}
+        </div>
+        <div class="mb-3">
+            {{ formulario.estado.label_tag }}
+            {{ formulario.estado }}
+            {% if formulario.estado.errors %}
+                <div class="text-danger">{{ formulario.estado.errors }}</div>
+            {% endif %}
+        </div>
+        <div class="mb-3">
+            {{ formulario.metodo_pago.label_tag }}
+            {{ formulario.metodo_pago }}
+            {% if formulario.metodo_pago.errors %}
+                <div class="text-danger">{{ formulario.metodo_pago.errors }}</div>
+            {% endif %}
+        </div>
+        <div class="d-flex justify-content-center">
+            <button type="submit" class="btn btn-success">Guardar Cambios</button>
+            <a href="{% url 'orden_listar_api' %}" class="btn btn-secondary ms-3">Cancelar</a>
+        </div>
+    </form>
+</div>
+{% endblock %}
