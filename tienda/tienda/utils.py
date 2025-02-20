@@ -3,7 +3,7 @@ import requests
 from requests.exceptions import HTTPError
 from django.shortcuts import render
 
-def manejar_errores_api(response, request, formulario=None, template="errors/error_general.html"): # Centralizamos el manejo de errores en `manejar_errores_api()`, 
+def manejar_errores_api(response, request, formulario=None, template="errores/error_general.html"): # Centralizamos el manejo de errores en `manejar_errores_api()`, 
                                                                                                 # evitando repetir código en cada vista y facilitando su mantenimiento.
     """
     Maneja los errores HTTP al hacer peticiones a la API REST.
@@ -31,13 +31,13 @@ def manejar_errores_api(response, request, formulario=None, template="errors/err
                 return render(request, template, {"error": "Error en la respuesta de la API."})
 
     if response.status_code == 401:
-        return render(request, 'errors/401.html')  # Acceso no autorizado
+        return render(request, 'errores/401.html')  # Acceso no autorizado
     elif response.status_code == 403:
-        return render(request, 'errors/403.html')  # Prohibido
+        return render(request, 'errores/403.html')  # Prohibido
     elif response.status_code == 404:
-        return render(request, 'errors/404.html')  # No encontrado
+        return render(request, 'errores/404.html')  # No encontrado
     elif response.status_code >= 500:
-        return render(request, 'errors/500.html')  # Error interno del servidor
+        return render(request, 'errores/500.html')  # Error interno del servidor
 
     return render(request, template, {"error": "Ocurrió un error inesperado."})
 
@@ -51,6 +51,6 @@ def manejar_excepciones_api(err, request):
     print(f"⚠️ Error inesperado: {err}")
     
     if isinstance(err, requests.exceptions.RequestException):
-        return render(request, 'errors/conexion_error.html')
+        return render(request, 'errores/conexion_error.html')
     
-    return render(request, 'errors/error_general.html')
+    return render(request, 'errores/error_general.html')

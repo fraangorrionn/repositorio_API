@@ -1,0 +1,14 @@
+{% extends "principal.html" %}
+
+{% block contenido %}
+
+{% load django_bootstrap5 %}
+<form action="{% url 'favoritos_editar_api' favorito.id %}" method="post">
+    {% csrf_token %}
+    
+    {% bootstrap_form formulario %}
+    
+    {% bootstrap_button "Guardar Cambios" button_type="submit" button_class="btn-primary" %}
+</form>
+
+{% endblock %}

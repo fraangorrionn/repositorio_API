@@ -1,0 +1,39 @@
+{% extends "principal.html" %}
+
+{% block contenido %}
+<div class="container mt-4">
+    <div class="card shadow-lg p-4 bg-white rounded">
+        <h1 class="display-4 text-primary text-center">🛒 Detalles del Producto</h1>
+
+        <div class="col-sm-12 mb-3">
+            <ul class="list-group">
+                <li class="list-group-item"><strong>Nombre:</strong> {{ producto.nombre }}</li>
+                <li class="list-group-item"><strong>Precio:</strong> {{ producto.precio }} €</li>
+                <li class="list-group-item"><strong>Tipo:</strong> {{ producto.tipo }}</li>
+                <li class="list-group-item"><strong>Stock:</strong> {{ producto.stock }}</li>
+                <li class="list-group-item"><strong>Descripción:</strong> {{ producto.descripcion }}</li>
+                <li class="list-group-item"><strong>Tiempo Estimado de Envío:</strong> 
+                    {% if producto.tiempo_estimado_envio %}
+                        {{ producto.tiempo_estimado_envio }}
+                    {% else %}
+                        No especificado
+                    {% endif %}
+                </li>
+                <li class="list-group-item"><strong>Categorías:</strong> 
+                    {% if producto.categorias %}
+                        {{ producto.categorias|join:", " }}
+                    {% else %}
+                        Sin categorías
+                    {% endif %}
+                </li>
+            </ul>
+        </div>
+
+        <div class="text-center mt-4">
+            <a href="{% url 'productos_listar_api' %}" class="btn btn-warning">
+                🔙 Volver a la lista de productos
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

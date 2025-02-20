@@ -1,0 +1,30 @@
+{% extends "principal.html" %}
+
+{% block contenido %}
+<div class="container mt-5">
+    <h1 class="text-center">Modificar Favorito</h1>
+
+    <!-- Formulario -->
+    <form method="post" action="">
+        {% csrf_token %}
+        <div class="mb-3">
+            {{ formulario.prioridad.label_tag }}
+            {{ formulario.prioridad }}
+            {% if formulario.prioridad.errors %}
+                <div class="text-danger">{{ formulario.prioridad.errors }}</div>
+            {% endif %}
+        </div>
+        <div class="mb-3">
+            {{ formulario.notas.label_tag }}
+            {{ formulario.notas }}
+            {% if formulario.notas.errors %}
+                <div class="text-danger">{{ formulario.notas.errors }}</div>
+            {% endif %}
+        </div>
+        <div class="d-flex justify-content-center">
+            <button type="submit" class="btn btn-success">Guardar Cambios</button>
+            <a href="{% url 'favoritos_listar_api' %}" class="btn btn-secondary ms-3">Cancelar</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

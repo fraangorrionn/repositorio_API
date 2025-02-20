@@ -1,7 +1,7 @@
 {% extends "principal.html" %}
 
 {% block contenido %}
-    <h1 class="display-3">Lista de Productos</h1>
+    <h1 class="display-3">Lista de Productos detallados</h1>
 
     <div class="row">
         {% for producto in productos %}
@@ -19,7 +19,7 @@
     </div>
 
     <div class="mt-4">
-        <a href="{% url 'lista_productos_detallada_api' producto.id%}" class="btn btn-primary">Ver detalles de los productos</a>
+        <a href="{% url 'producto_detalle_api' producto.id %}" class="btn btn-primary">Ver detalles de los productos</a>
 
     </div>
 {% endblock %}

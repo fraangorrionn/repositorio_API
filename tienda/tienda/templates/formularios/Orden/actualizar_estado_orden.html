@@ -16,13 +16,20 @@
     {% endif %}
 
     <!-- Formulario -->
-    <form method="post" action="">
+    <form method="post" action="" enctype="multipart/form-data">
         {% csrf_token %}
         <div class="mb-3">
             {{ formulario.estado.label_tag }}
             {{ formulario.estado }}
             {% if formulario.estado.errors %}
                 <div class="text-danger">{{ formulario.estado.errors }}</div>
+            {% endif %}
+        </div>
+        <div class="mb-3">
+            {{ formulario.archivo_adjunto.label_tag }}
+            {{ formulario.archivo_adjunto }}
+            {% if formulario.archivo_adjunto.errors %}
+                <div class="text-danger">{{ formulario.archivo_adjunto.errors }}</div>
             {% endif %}
         </div>
         <div class="d-flex justify-content-center">
@@ -32,3 +39,4 @@
     </form>
 </div>
 {% endblock %}
+

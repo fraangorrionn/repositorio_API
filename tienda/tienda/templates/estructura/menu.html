@@ -1,15 +1,49 @@
 {% load static %}
 <div class="dropdown">
-    <!-- Botón para abrir/cerrar el menú -->
     <button class="dropbtn" id="menuButton">
         <i class="fa-solid fa-bars"></i> Menú
     </button>
 
-    <!-- Contenido del menú -->
     <ul class="dropdown-content" id="menuDropdown">
         <li><a href="{% url 'index' %}"><i class="fa-solid fa-house"></i> Inicio</a></li>
         <li><a href="{% url 'producto_listar_api' %}"><i class="fa-solid fa-box"></i> Productos</a></li>
         <li><a href="{% url 'ordenes_listar_api' %}"><i class="fa-solid fa-list"></i> Órdenes</a></li>
         <li><a href="{% url 'proveedores_listar_api' %}"><i class="fa-solid fa-truck"></i> Proveedores</a></li>
+        <li><a href="{% url 'favoritos_listar_api' %}"><i class="fa-solid fa-heart"></i> Favoritos</a></li>
+        <li><a href="{% url 'usuarios_listar_api' %}"><i class="fa-solid fa-user"></i> Usuarios</a></li>
+        
+        <li><a href="{% url 'producto_crear_api' %}"><i class="fa-solid fa-box"></i> Crear Producto</a></li>
+        <li><a href="{% url 'orden_crear_api' %}"><i class="fa-solid fa-list"></i> Crear Orden</a></li>
+        <li><a href="{% url 'proveedor_crear_api' %}"><i class="fa-solid fa-truck"></i> Crear Proveedor</a></li>
+        <li><a href="{% url 'favoritos_crear_api' %}"><i class="fa-solid fa-heart"></i> Crear Favorito</a></li>
+        <li><a href="{% url 'crear_usuario' %}"><i class="fa-solid fa-user"></i> Crear Usuario</a></li>
+
+        <!-- todos estan por defecto con id 1, hay que cambiarlo aquí-->
+         
+        <li><a href="{% url 'producto_editar_api' 1 %}"><i class="fa-solid fa-box"></i> Editar Producto</a></li>
+        <li><a href="{% url 'orden_editar_api' 1 %}"><i class="fa-solid fa-list"></i> Editar Orden</a></li>
+        <li><a href="{% url 'proveedor_editar_api' 1 %}"><i class="fa-solid fa-truck"></i> Editar Proveedor</a></li>
+        <li><a href="{% url 'editar_favoritos_api' 1 %}"><i class="fa-solid fa-heart"></i> Editar Favorito</a></li>
+
+        <li><a href="{% url 'producto_actualizar_nombre_api' 1 %}"><i class="fa-solid fa-box"></i> Actualizar Producto</a></li>
+        <li><a href="{% url 'orden_actualizar_estado_api' 1 %}"><i class="fa-solid fa-list"></i> Actualizar Orden</a></li>
+        <li><a href="{% url 'proveedor_actualizar_contacto_api' 1 %}"><i class="fa-solid fa-truck"></i> Actualizar Proveedor</a></li>
+        <li><a href="{% url 'actualizar_prioridad_favoritos_api' 1 %}"><i class="fa-solid fa-heart"></i> Actualizar Favorito</a></li>
+
+        <li><a href="{% url 'producto_eliminar_api' 1 %}"><i class="fa-solid fa-box"></i> Eliminar Producto</a></li>
+        <li><a href="{% url 'orden_eliminar_api' 1 %}"><i class="fa-solid fa-list"></i> Eliminar Orden</a></li>
+        <li><a href="{% url 'proveedor_eliminar_api' 1 %}"><i class="fa-solid fa-truck"></i> Eliminar Proveedor</a></li>
+        <li><a href="{% url 'eliminar_favoritos_api' 1 %}"><i class="fa-solid fa-heart"></i> Eliminar Favorito</a></li>
+
+        <li><a href="{% url 'obtener_producto' 1 %}"><i class="fa-solid fa-box"></i> Obtener Producto</a></li>
+        <li><a href="{% url 'obtener_orden' 1 %}"><i class="fa-solid fa-list"></i> Obtener Orden</a></li>
+        <li><a href="{% url 'obtener_proveedor' 1 %}"><i class="fa-solid fa-truck"></i> Obtener Proveedor</a></li>
+        <li><a href="{% url 'obtener_favoritos' 1 %}"><i class="fa-solid fa-heart"></i> Obtener Favorito</a></li>
+
+        <li><a href="{% url 'crear_producto_viewset'%}"><i class="fa-solid fa-box"></i> Crear Producto ViewSets</a></li>
+        <li><a href="{% url 'editar_producto_viewset' 1 %}"><i class="fa-solid fa-list"></i> Editar Producto ViewSets</a></li>
+        <li><a href="{% url 'producto_actualizar_nombre_viewset_api' 1 %}"><i class="fa-solid fa-box"></i> Actualizar Nombre Producto ViewSet</a></li>
+        <li><a href="{% url 'eliminar_producto_viewset' 1 %}"><i class="fa-solid fa-heart"></i> Eliminar Producto ViewSets</a></li>
+        <li><a href="{% url 'listar_productos_viewset'%}"><i class="fa-solid fa-box"></i> Lista Producto ViewSets</a></li>
     </ul>    
 </div>

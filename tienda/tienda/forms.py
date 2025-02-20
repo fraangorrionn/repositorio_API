@@ -129,6 +129,7 @@ class ProductoActualizarNombreForm(forms.Form):
         max_length=100,
         help_text="100 caracteres como máximo"
     )
+    
 
 class OrdenForm(forms.Form):
     usuario = forms.IntegerField(
@@ -166,6 +167,13 @@ class OrdenForm(forms.Form):
         widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ingrese el método de pago'})
     )
 
+    archivo_adjunto = forms.FileField(
+        label="Adjuntar Archivo (Opcional)",
+        required=False
+    )
+
+
+
 class OrdenActualizarEstadoForm(forms.Form):
     estado = forms.ChoiceField(
         label="Estado de la Orden",
@@ -178,6 +186,13 @@ class OrdenActualizarEstadoForm(forms.Form):
         ],
         help_text="Seleccione un estado válido para la orden"
     )
+
+    archivo_adjunto = forms.FileField(
+        label="Adjuntar Archivo",
+        required=False,
+        help_text="Suba un archivo adjunto opcional"
+    )
+
 
 
 class ProveedorForm(forms.Form):
@@ -261,3 +276,65 @@ class FavoritosForm(forms.Form):
             required=True,
             help_text="Selecciona un producto"
         )
+
+class FavoritosActualizarPrioridadForm(forms.Form):
+    prioridad = forms.IntegerField(
+        label="Prioridad",
+        required=True,
+        min_value=1,
+        max_value=5,
+        help_text="Elige un número entre 1 y 5"
+    )
+    notas = forms.CharField(
+        label="Notas",
+        required=False,
+        max_length=200,
+        widget=forms.Textarea(attrs={'rows': 3, 'placeholder': 'Notas opcionales...'})
+    )
+
+
+class UsuarioForm(forms.Form):
+    username = forms.CharField(
+        label="Nombre de usuario",
+        required=True,
+        max_length=150,
+        help_text="150 caracteres como máximo"
+    )
+
+    email = forms.EmailField(
+        label="Correo electrónico",
+        required=True,
+        widget=forms.EmailInput(attrs={'placeholder': 'Ingrese su correo'})
+    )
+
+    password = forms.CharField(
+        label="Contraseña",
+        widget=forms.PasswordInput(),
+        required=True
+    )
+
+    ROL_CHOICES = [
+        (1, "Administrador"),
+        (2, "Cliente"),
+        (3, "Gerente"),
+    ]
+
+    rol = forms.ChoiceField(
+        choices=ROL_CHOICES,
+        required=True,
+        label="Rol"
+    )
+
+    direccion = forms.CharField(
+        label="Dirección",
+        required=False,
+        max_length=255,
+        widget=forms.TextInput(attrs={'placeholder': 'Ingrese la dirección'})
+    )
+
+    telefono = forms.CharField(
+        label="Teléfono",
+        required=False,
+        max_length=15,
+        widget=forms.TextInput(attrs={'placeholder': 'Ingrese el número de teléfono'})
+    )

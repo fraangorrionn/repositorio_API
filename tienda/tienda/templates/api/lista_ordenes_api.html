@@ -11,6 +11,7 @@
                     <th>Estado</th>
                     <th>Total</th>
                     <th>Fecha</th>
+                    <th>Archivo Adjunto</th>  <!-- Nueva columna para el archivo -->
                 </tr>
             </thead>
             <tbody>
@@ -21,9 +22,19 @@
                     <td>{{ orden.estado }}</td>
                     <td>{{ orden.total }}€</td>
                     <td>{{ orden.fecha_orden }}</td>
+                    <td>
+                        {% if orden.archivo_adjunto %}
+                            <a href="{{ orden.archivo_adjunto }}" target="_blank" class="btn btn-primary btn-sm">
+                                📄 Ver Archivo
+                            </a>
+                        {% else %}
+                            <span class="text-muted">Sin archivo</span>
+                        {% endif %}
+                    </td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
 {% endblock %}
+

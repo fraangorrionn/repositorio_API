@@ -1,0 +1,40 @@
+{% extends "principal.html" %}
+
+{% block contenido %}
+    <div class="container mt-4">
+        <h2>Lista de Favoritos</h2>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Tipo</th>
+                    <th>Precio</th>
+                    <th>Stock</th>
+                    <th>Acción</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for favorito in favoritos %}
+                <tr>
+                    <td>{{ favorito.producto.nombre }}</td>
+                    <td>{{ favorito.producto.tipo }}</td>
+                    <td>{{ favorito.producto.precio }}</td>
+                    <td>{{ favorito.producto.stock }}</td>
+                    {% if favorito.producto.id %}
+                        <td>
+                            <a href="{% url 'producto_detalle_api' favorito.producto.id %}" class="btn btn-info">Ver Detalle</a>
+                            <a href="{% url 'favorito_eliminar_api' favorito.id %}" class="btn btn-danger">Eliminar</a>
+                        </td>
+                    {% else %}
+                        <td>No disponible</td>
+                    {% endif %}
+                </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="5" class="text-center text-danger">No tienes productos favoritos</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

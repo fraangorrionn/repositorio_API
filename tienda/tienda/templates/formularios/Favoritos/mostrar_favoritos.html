@@ -1,0 +1,24 @@
+{% extends "principal.html" %}
+
+{% block contenido %}
+<div class="container mt-4">
+    <div class="card shadow-lg p-4 bg-white rounded">
+        <h1 class="display-4 text-primary text-center">⭐ Producto Favorito</h1>
+
+        <div class="col-sm-12 mb-3">
+            <ul class="list-group">
+                <li class="list-group-item"><strong>Usuario:</strong> {{ favorito.usuario }}</li>
+                <li class="list-group-item"><strong>Producto:</strong> {{ favorito.producto }}</li>
+                <li class="list-group-item"><strong>Prioridad:</strong> {{ favorito.prioridad }}</li>
+                <li class="list-group-item"><strong>Notas:</strong> {{ favorito.notas }}</li>
+            </ul>
+        </div>
+
+        <div class="text-center mt-4">
+            <a href="{% url 'favoritos_listar_api' %}" class="btn btn-warning">
+                ✏️ Ver lista de Favoritos
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,21 +1,26 @@
 {% extends 'principal.html' %}
-{% block title %}Crear Usuario{% endblock %}
 
 {% block contenido %}
-{% if perms.tienda.add_usuario %}
-    <div class="container mt-5">
-        <h1>Crear Usuario</h1>
-        <form method="post">
-            {% csrf_token %}
-            {{ formulario.as_p }}
-            <button type="submit" class="btn btn-primary">Crear Usuario</button>
-        </form>
+<div class="container mt-5">
+    <div class="card shadow-lg">
+        <div class="card-header bg-primary text-white text-center">
+            <h2>Crear Usuario</h2>
+        </div>
+        <div class="card-body">
+            <form action="" method="POST">
+                {% load django_bootstrap5 %} 
+                {% csrf_token %}
+
+                {% bootstrap_form formulario layout="horizontal" %}       
+
+                <div class="text-center mt-4">
+                    {% bootstrap_button "Registrar" button_type="submit" button_class="btn btn-success px-4" %}
+                </div>
+            </form>
+        </div>
+        <div class="card-footer text-muted text-center">
+            Completa los campos para registrar un nuevo usuario.
+        </div>
     </div>
-{% else %}
-    <div class="container mt-5">
-        <p>No tienes permisos para crear usuarios. Contacta al administrador si necesitas acceso.</p>
-    </div>
-{% endif %}
+</div>
 {% endblock %}
-
-

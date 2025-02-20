@@ -2,30 +2,29 @@
 
 {% block contenido %}
     <div class="container mt-4">
-        <h2>Lista de Productos</h2>
+        <h2>Lista de Productos (ViewSet)</h2>
         <table class="table">
             <thead>
                 <tr>
+                    <th>ID</th>
                     <th>Nombre</th>
                     <th>Tipo</th>
                     <th>Precio</th>
                     <th>Stock</th>
-                    <th>Detalle</th>
                 </tr>
             </thead>
             <tbody>
                 {% for producto in productos %}
                 <tr>
+                    <td>{{ producto.id }}</td>
                     <td>{{ producto.nombre }}</td>
                     <td>{{ producto.tipo }}</td>
-                    <td>{{ producto.precio }}</td>
+                    <td>${{ producto.precio }}</td>
                     <td>{{ producto.stock }}</td>
-                    {% if producto.id %}
-                        <td><a href="{% url 'producto_detalle_api' producto.id %}" class="btn btn-info">Ver Detalle</a></td>
-                    {% else %}
-                        <td>No disponible</td>
-                    {% endif %}
-
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="text-center">No hay productos disponibles.</td>
                 </tr>
                 {% endfor %}
             </tbody>

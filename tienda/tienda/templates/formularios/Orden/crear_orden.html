@@ -7,14 +7,15 @@
             <h2>Crear Orden</h2>
         </div>
         <div class="card-body">
-            <form action="" method="POST">
-                {% load django_bootstrap5 %} 
+            <!-- IMPORTANTE: Agregar enctype para permitir archivos -->
+            <form action="" method="POST" enctype="multipart/form-data">
+                {% load django_bootstrap5 %}
                 {% csrf_token %}
-                
-                <!-- Formulario estilizado -->
-                {% bootstrap_form formulario layout="horizontal" %}       
-
-                <!-- Botón enviar -->
+            
+                <!-- Renderiza automáticamente todos los campos del formulario -->
+                {% bootstrap_form formulario layout="horizontal" %} 
+            
+                <!-- Botón de envío -->
                 <div class="text-center mt-4">
                     {% bootstrap_button "Enviar" button_type="submit" button_class="btn btn-success px-4" %}
                 </div>
@@ -26,4 +27,3 @@
     </div>
 </div>
 {% endblock %}
-
