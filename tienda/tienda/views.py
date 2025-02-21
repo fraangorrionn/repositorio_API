@@ -407,7 +407,7 @@ def crear_orden(request):
 
             if response.status_code == requests.codes.ok:
                 messages.success(request, response.json())
-                return redirect("orden_listar_api")
+                return redirect("ordenes_listar_api")
             else:
                 return manejar_errores_api(response, request, formulario, "formularios/Orden/crear_orden.html")
 

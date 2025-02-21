@@ -19,7 +19,7 @@ python manage.py dumpdata --indent 4 > tienda/fixtures/datos.json
 python manage.py loaddata tienda/fixtures/datos.json
 
 python manage.py createsuperuser
-python manage.py runserver
+python manage.py runserver 8001
 
 git add . git commit -m 'Completado' git push git pull
 
