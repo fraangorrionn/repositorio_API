@@ -120,3 +120,23 @@ class helper:
     def eliminar_producto(producto_id):
         headers = {'Authorization': f'Bearer {env("Admin")}'}
         return requests.delete(f"{BASE_API_URL}/api/v1/productos-viewset/{producto_id}/", headers=headers)
+    
+    
+    def obtener_token_session(usuario,password):
+        token_url = BASE_API_URL + '/oauth2/token/'
+        data = {
+            'grant_type': 'password',
+            'username': usuario,
+            'password': password,
+            'client_id': 'mi_aplicacion',
+            'client_secret': 'mi_aplicacion',
+        }
+
+        response = requests.post(token_url, data=data)
+        respuesta = response.json()
+        if response.status_code == 200:
+            return respuesta.get('access_token')
+        else:
+            raise Exception(respuesta.get("error_description"))
+        
+    

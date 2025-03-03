@@ -338,3 +338,19 @@ class UsuarioForm(forms.Form):
         max_length=15,
         widget=forms.TextInput(attrs={'placeholder': 'Ingrese el número de teléfono'})
     )
+
+
+class RegistroForm(UserCreationForm): 
+    roles = (
+                                ("","NINGUNO"),
+                                (2, 'Cliente'),
+                                (3, 'Gerente'),
+            )   
+    rol = forms.ChoiceField(choices=roles)  
+    class Meta:
+        model = User
+        fields = ('username', 'email', 'password1', 'password2','rol')
+        
+class LoginForm(forms.Form):
+    usuario = forms.CharField()
+    password = forms.CharField(widget=forms.PasswordInput())

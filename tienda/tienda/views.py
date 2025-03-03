@@ -12,6 +12,8 @@ import os
 import json
 from .helper import helper
 from .cliente_api import *
+from dotenv import set_key
+from dotenv import load_dotenv
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 environ.Env.read_env(os.path.join(BASE_DIR, '.env'),True)
@@ -1197,6 +1199,101 @@ def eliminar_producto_viewset(request, producto_id):
         messages.error(request, "Error al eliminar producto con ViewSet")
 
     return redirect("listar_productos_viewset")
+
+
+#------------------------------------------------usuario-----------------------------------------------------------------------------
+#AGR12345
+def registrar_usuario(request):
+    if (request.method == "POST"):
+        try:
+            formulario = RegistroForm(request.POST)
+            if(formulario.is_valid()):
+                headers =  {
+                            "Content-Type": "application/json" 
+                        }
+                response = requests.post(
+                    BASE_API_URL + version + 'registrar/usuario/',
+                    headers=headers,
+                    data=json.dumps(formulario.cleaned_data)
+                )
+                
+                if(response.status_code == requests.codes.ok):
+                    usuario = response.json()
+                    token_acceso = helper.obtener_token_session(
+                            formulario.cleaned_data.get("username"),
+                            formulario.cleaned_data.get("password1")
+                            )
+                    request.session["usuario"]=usuario
+                    request.session["token"] = token_acceso
+                    redirect("index")
+                else:
+                    print(response.status_code)
+                    response.raise_for_status()
+        except HTTPError as http_err:
+            print(f'Hubo un error en la petición: {http_err}')
+            if(response.status_code == 400):
+                errores = response.json()
+                for error in errores:
+                    formulario.add_error(error,errores[error])
+                return render(request, 
+                            'registration/signup.html',
+                            {"formulario":formulario})
+            else:
+                return mi_error_500(request)
+        except Exception as err:
+            print(f'Ocurrió un error: {err}')
+            return mi_error_500(request)
+            
+    else:
+        formulario = RegistroForm()
+    return render(request, 'registration/signup.html', {'formulario': formulario})
+
+def login(request):
+    if (request.method == "POST"):
+        formulario = LoginForm(request.POST)
+        try:
+            token_acceso = helper.obtener_token_session(
+                                formulario.data.get("usuario"),
+                                formulario.data.get("password")
+                                )
+            request.session["token"] = token_acceso
+            
+            # Guardar token en la sesión de Django
+            request.session["token"] = token_acceso
+
+            if not token_acceso:
+                print("❌ ERROR: No se recibió un token válido del servidor.")
+                return render(request, 'registro/login.html', {"form": formulario, "error": "No se recibió un token válido."})
+
+            print("🔑 Token recibido en login:", token_acceso)  # ✅ Verifica si el token es válido
+
+            # 🔹 Guardar el token en el archivo .env
+            env_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".env"))
+            set_key(env_path, "TOKEN_ACCESO", token_acceso)
+            print("✅ Token guardado en .env correctamente")
+
+          
+            headers = {'Authorization': 'Bearer '+token_acceso} 
+            response = requests.get(BASE_API_URL + version + 'usuario/token/' + token_acceso,headers=headers)
+            usuario = response.json()
+            request.session["usuario"] = usuario
+            
+            return  redirect("index")
+        except Exception as excepcion:
+            print(f'Hubo un error en la petición: {excepcion}')
+            formulario.add_error("usuario",excepcion)
+            formulario.add_error("password",excepcion)
+            return render(request, 
+                            'registro/login.html',
+                            {"form":formulario})
+    else:  
+        formulario = LoginForm()
+    return render(request, 'registro/login.html', {'form': formulario})
+
+def logout(request):
+    del request.session['token']
+    return redirect('index')
+
 
 # Páginas de error personalizadas
 def mi_error_404(request, exception=None):

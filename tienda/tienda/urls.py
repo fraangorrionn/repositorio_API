@@ -59,4 +59,9 @@ urlpatterns = [
     path('productos/<int:producto_id>/actualizar-nombre-viewset/', actualizar_nombre_producto_viewset, name='producto_actualizar_nombre_viewset_api'),
     path('productos-viewset/<int:producto_id>/eliminar/', eliminar_producto_viewset, name="eliminar_producto_viewset"),
 
+    
+    #Usuario
+    path('registrar', registrar_usuario,name='registrar_usuario'),
+    path('login', login,name='login'),
+    path('logout', logout,name='logout'),
 ]

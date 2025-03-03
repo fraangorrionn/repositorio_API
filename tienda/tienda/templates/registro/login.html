@@ -1,12 +1,12 @@
-{% extends 'principal.html' %}
+{% extends "principal.html" %}
 
 {% block contenido %}
-<div class="container mt-5">
-    <h2>Iniciar Sesión</h2>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="btn btn-primary">Acceder</button>
-    </form>
-</div>
+<form action = "{% url 'login' %}" method = "post"> 
+    
+     {% load django_bootstrap5 %}
+    {% csrf_token %} 
+    {% bootstrap_form form %}         
+
+    {% bootstrap_button "Enviar" button_type="submit" button_class="btn-primary" %}
+</form>
 {% endblock %}
