@@ -94,7 +94,7 @@ class helper:
     
     '''He agregado @staticmethod para los metodos que no necesitan acceder a self ni a cls, 
     aquellos que no dependen del estado del objeto ni de la clase'''
-    @staticmethod
+    '''@staticmethod
     def obtener_productos():
         headers = {'Authorization': f'Bearer {env("Admin")}'}
         response = requests.get(f"{BASE_API_URL}/api/v1/productos-viewset/", headers=headers)
@@ -119,7 +119,7 @@ class helper:
     @staticmethod
     def eliminar_producto(producto_id):
         headers = {'Authorization': f'Bearer {env("Admin")}'}
-        return requests.delete(f"{BASE_API_URL}/api/v1/productos-viewset/{producto_id}/", headers=headers)
+        return requests.delete(f"{BASE_API_URL}/api/v1/productos-viewset/{producto_id}/", headers=headers)'''
     
     
     def obtener_token_session(usuario,password):
@@ -129,7 +129,7 @@ class helper:
             'username': usuario,
             'password': password,
             'client_id': 'mi_aplicacion',
-            'client_secret': 'mi_aplicacion',
+            'client_secret': 'mi_clave_secreta',
         }
 
         response = requests.post(token_url, data=data)

@@ -12,8 +12,6 @@ import os
 import json
 from .helper import helper
 from .cliente_api import *
-from dotenv import set_key
-from dotenv import load_dotenv
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 environ.Env.read_env(os.path.join(BASE_DIR, '.env'),True)
@@ -1201,8 +1199,7 @@ def eliminar_producto_viewset(request, producto_id):
     return redirect("listar_productos_viewset")
 
 
-#------------------------------------------------usuario-----------------------------------------------------------------------------
-#AGR12345
+#------------------------------------------------registrar usuario-----------------------------------------------------------------------------
 def registrar_usuario(request):
     if (request.method == "POST"):
         try:
@@ -1212,7 +1209,7 @@ def registrar_usuario(request):
                             "Content-Type": "application/json" 
                         }
                 response = requests.post(
-                    BASE_API_URL + version + 'registrar/usuario/',
+                    BASE_API_URL + version + 'registrar/usuario',
                     headers=headers,
                     data=json.dumps(formulario.cleaned_data)
                 )
@@ -1225,7 +1222,7 @@ def registrar_usuario(request):
                             )
                     request.session["usuario"]=usuario
                     request.session["token"] = token_acceso
-                    redirect("index")
+                    return redirect("index")
                 else:
                     print(response.status_code)
                     response.raise_for_status()
@@ -1236,7 +1233,7 @@ def registrar_usuario(request):
                 for error in errores:
                     formulario.add_error(error,errores[error])
                 return render(request, 
-                            'registration/signup.html',
+                            'registro/signup.html',
                             {"formulario":formulario})
             else:
                 return mi_error_500(request)
@@ -1246,7 +1243,8 @@ def registrar_usuario(request):
             
     else:
         formulario = RegistroForm()
-    return render(request, 'registration/signup.html', {'formulario': formulario})
+    return render(request, 'registro/signup.html', {'formulario': formulario})
+
 
 def login(request):
     if (request.method == "POST"):
@@ -1255,23 +1253,9 @@ def login(request):
             token_acceso = helper.obtener_token_session(
                                 formulario.data.get("usuario"),
                                 formulario.data.get("password")
-                                )
+                            )
             request.session["token"] = token_acceso
             
-            # Guardar token en la sesión de Django
-            request.session["token"] = token_acceso
-
-            if not token_acceso:
-                print("❌ ERROR: No se recibió un token válido del servidor.")
-                return render(request, 'registro/login.html', {"form": formulario, "error": "No se recibió un token válido."})
-
-            print("🔑 Token recibido en login:", token_acceso)  # ✅ Verifica si el token es válido
-
-            # 🔹 Guardar el token en el archivo .env
-            env_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".env"))
-            set_key(env_path, "TOKEN_ACCESO", token_acceso)
-            print("✅ Token guardado en .env correctamente")
-
           
             headers = {'Authorization': 'Bearer '+token_acceso} 
             response = requests.get(BASE_API_URL + version + 'usuario/token/' + token_acceso,headers=headers)
@@ -1290,9 +1274,164 @@ def login(request):
         formulario = LoginForm()
     return render(request, 'registro/login.html', {'form': formulario})
 
+
 def logout(request):
     del request.session['token']
     return redirect('index')
+
+#------------------------------------------------get-----------------------------------------------------------------------------
+
+def listar_orden_usuario(request):
+    # Obtener el token de la sesión del usuario
+    token_acceso = request.session.get("token")
+    if not token_acceso:
+        messages.error(request, "No tienes autorización para ver tus pedidos.")
+        return redirect("login")  # Redirige al login si no hay token
+
+    headers = {
+        'Authorization': f'Bearer {token_acceso}',
+        "Content-Type": "application/json"
+    }
+
+    try:
+        # Hacemos la solicitud GET a la API para obtener las ordenes del usuario autenticado
+        response = requests.get(f"{BASE_API_URL}/mis-ordenes/", headers=headers)
+
+        if response.status_code == 200:
+            ordenes = response.json()  # Convertir la respuesta JSON en un diccionario Python
+        else:
+            ordenes = []
+            messages.error(request, f"Error {response.status_code}: {response.text}")
+
+    except requests.exceptions.RequestException as err:
+        ordenes = []
+        messages.error(request, f"Error de conexión: {err}")
+    
+    return render(request, 'api/orden_list.html', {'ordenes': ordenes})
+
+
+def listar_favoritos_usuario(request):
+
+    # Obtener el token de la sesión del usuario
+    token_acceso = request.session.get("token")
+    if not token_acceso:
+        messages.error(request, "No tienes autorización para ver tus productos favoritos.")
+        return redirect("login")  # Redirige al login si no hay token
+
+    headers = {
+        'Authorization': f'Bearer {token_acceso}',
+        "Content-Type": "application/json"
+    }
+
+    try:
+        # Hacemos la solicitud GET a la API para obtener los productos favoritos del usuario
+        response = requests.get(f"{BASE_API_URL}/mis-favoritos/", headers=headers)
+
+        if response.status_code == 200:
+            favoritos = response.json()  # Convertir la respuesta JSON en un diccionario Python
+        else:
+            favoritos = []
+            messages.error(request, f"Error {response.status_code}: {response.text}")
+
+    except requests.exceptions.RequestException as err:
+        favoritos = []
+        messages.error(request, f"Error de conexión: {err}")
+    
+    return render(request, 'api/favoritos_list.html', {'favoritos': favoritos})
+
+#------------------------------------------------post autentificacion-----------------------------------------------------------------------------
+
+def crear_orden_usuario(request):
+        
+    if request.method == "POST":
+        formulario = OrdenForm(request.POST, request.FILES)
+
+        # Obtener el token de la sesión del usuario
+        token_acceso = request.session.get("token")
+        if not token_acceso:
+            messages.error(request, "No tienes autorización para realizar esta acción.")
+            return redirect("login")  # Redirige al login si no hay token
+
+        headers = {
+            'Authorization': f'Bearer {token_acceso}',
+            "Content-Type": "application/json"
+        }
+
+        datos = formulario.data.copy()
+        datos.pop("usuario", None)  # Eliminamos el campo usuario del formulario
+        datos["archivo_adjunto"] = request.FILES.get("archivo_adjunto")  # Adjuntar archivo si existe
+
+        try:
+            # Hacer la petición POST a la API
+            response = requests.post(
+                f"{BASE_API_URL}/crear-orden/",
+                headers=headers,
+                data=json.dumps(datos)
+            )
+
+            if response.status_code == 201:  # Orden creada correctamente
+                messages.success(request, "Orden creada correctamente.")
+                return redirect("orden_listar_api")  # Redirigir a la lista de pedidos
+            elif response.status_code == 400:
+                errores = response.json()
+                for error in errores:
+                    formulario.add_error(error, errores[error])
+            else:
+                messages.error(request, f"Error {response.status_code}: {response.text}")
+
+        except requests.exceptions.RequestException as err:
+            messages.error(request, f"Error de conexión: {err}")
+
+    else:
+        formulario = OrdenForm()
+
+    return render(request, 'formularios/Orden/crear_orden.html', {"formulario": formulario})
+
+
+def crear_favorito_usuario(request):
+    
+    if request.method == "POST":
+        formulario = FavoritosForm(request.POST)
+
+        # Obtener el token de la sesión del usuario
+        token_acceso = request.session.get("token")
+        if not token_acceso:
+            messages.error(request, "No tienes autorización para realizar esta acción.")
+            return redirect("login")  # Redirige al login si no hay token
+
+        headers = {
+            'Authorization': f'Bearer {token_acceso}',
+            "Content-Type": "application/json"
+        }
+
+        datos = formulario.data.copy()
+        datos.pop("usuario", None)  # Eliminamos el campo usuario del formulario
+
+        try:
+            # Hacer la petición POST a la API
+            response = requests.post(
+                f"{BASE_API_URL}/crear-favorito/",
+                headers=headers,
+                data=json.dumps(datos)
+            )
+
+            if response.status_code == 201:  # Producto agregado correctamente
+                messages.success(request, "Producto agregado a favoritos correctamente.")
+                return redirect("favoritos_listar_api")  # Redirigir a la lista de favoritos
+            elif response.status_code == 400:
+                errores = response.json()
+                for error in errores:
+                    formulario.add_error(error, errores[error])
+            else:
+                messages.error(request, f"Error {response.status_code}: {response.text}")
+
+        except requests.exceptions.RequestException as err:
+            messages.error(request, f"Error de conexión: {err}")
+
+    else:
+        formulario = FavoritosForm()
+
+    return render(request, 'formularios/Favoritos/crear_favoritos.html', {"formulario": formulario})
 
 
 # Páginas de error personalizadas

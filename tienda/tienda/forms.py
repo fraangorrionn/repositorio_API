@@ -1,5 +1,7 @@
 from django import forms
 from .helper import helper
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
 # ----------------- Búsqueda Simple de Producto ----------------- #
 class BusquedaProductoForm(forms.Form):
     textoBusqueda = forms.CharField(

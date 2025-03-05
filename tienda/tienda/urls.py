@@ -64,4 +64,15 @@ urlpatterns = [
     path('registrar', registrar_usuario,name='registrar_usuario'),
     path('login', login,name='login'),
     path('logout', logout,name='logout'),
+    
+    
+    #GET autentificacion
+    path('mis-ordenes/', listar_orden_usuario, name='listar_orden_usuario'),
+    path('mis-favoritos/', listar_favoritos_usuario, name='listar_favoritos_usuario'),
+    
+    
+    #POST autentificacion
+    path('crear-orden/', crear_orden_usuario, name='crear_orden_usuario'),
+    path('crear-favorito/', crear_favorito_usuario, name='crear_favorito_usuario'),
+
 ]
