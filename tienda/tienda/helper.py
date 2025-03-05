@@ -15,7 +15,7 @@ class helper:
     def obtener_productos():
         # Obtiene todos los productos desde la API
 
-        headers = {'Authorization': 'Bearer ' + env("Admin")} 
+        headers = {'Authorization': 'Bearer ' + env("TOKEN_ACCESO")} 
         response = requests.get(BASE_API_URL + version + 'productos/', headers=headers)
         productos = response.json()
 
@@ -27,7 +27,7 @@ class helper:
     def obtener_producto(id):
         # Obtiene un producto específico por su ID
         
-        headers = {'Authorization': 'Bearer ' + env("Admin")} 
+        headers = {'Authorization': 'Bearer ' + env("TOKEN_ACCESO")} 
         response = requests.get(BASE_API_URL + version + 'productos/' + str(id), headers=headers)
         producto = response.json()
         return producto
@@ -35,21 +35,21 @@ class helper:
     def obtener_orden(id):
         # Obtiene una orden específica por su ID desde la API.
         
-        headers = {'Authorization': 'Bearer ' + env("Admin")} 
+        headers = {'Authorization': 'Bearer ' + env("TOKEN_ACCESO")} 
         response = requests.get(BASE_API_URL + version + 'ordenes/' + str(id), headers=headers)
         orden = response.json()
         return orden
     
     def obtener_proveedor(id):
         # Obtiene un proveedor específico por su ID desde la API.
-        headers = {'Authorization': 'Bearer ' + env("Admin")} 
+        headers = {'Authorization': 'Bearer ' + env("TOKEN_ACCESO")} 
         response = requests.get(BASE_API_URL + version + 'proveedores/' + str(id), headers=headers)
         proveedor = response.json()
         return proveedor
 
 
     def obtener_usuarios():
-        headers = {'Authorization': f'Bearer {env("Admin")}'}
+        headers = {'Authorization': f'Bearer {env("TOKEN_ACCESO")}'}
         response = requests.get(f"{BASE_API_URL}/usuarios/", headers=headers)
 
         print("🔍 API Response Status:", response.status_code)
@@ -69,7 +69,7 @@ class helper:
 
 
     def obtener_productos():
-        headers = {'Authorization': 'Bearer '+env("Admin")}
+        headers = {'Authorization': 'Bearer '+env("TOKEN_ACCESO")}
         response = requests.get(BASE_API_URL + version + 'productos/', headers=headers)
         productos = response.json()
 
@@ -79,13 +79,13 @@ class helper:
         return lista_productos
 
     def obtener_favoritos():
-        headers = {'Authorization': 'Bearer ' + env("Admin")}
+        headers = {'Authorization': 'Bearer ' + env("TOKEN_ACCESO")}
         response = requests.get(BASE_API_URL + version + 'favoritos/', headers=headers)
         favoritos = response.json()
         return favoritos
     
     def obtener_favorito(id):
-        headers = {'Authorization': 'Bearer ' + env("Admin")}
+        headers = {'Authorization': 'Bearer ' + env("TOKEN_ACCESO")}
         response = requests.get(BASE_API_URL + version + f'favoritos/{id}/', headers=headers)
         favorito = response.json()
         return favorito 

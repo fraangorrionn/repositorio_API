@@ -3,6 +3,8 @@
 {% block contenido %}
     <h1 class="display-3">Lista de Órdenes</h1>
 
+    <pre>{{ ordenes }}</pre>  {# 🔹 Esto mostrará los datos en formato JSON para depuración #}
+
     <div class="row">
         {% for orden in ordenes %}
             <div class="col-sm-6 mb-2">

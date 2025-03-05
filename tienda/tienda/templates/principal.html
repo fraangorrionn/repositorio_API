@@ -22,6 +22,7 @@
                 <img src="{% static 'imagenes/logo.webp' %}" alt="Logo de la Tienda" class="logo">
 
                 <!-- Información del usuario / Sesión -->
+                 
                 <nav>
                     {% if user.is_authenticated %}
                         <ul class="list-unstyled mb-0">
@@ -35,12 +36,13 @@
                             No has iniciado sesión. 
                         </p>
                     {% endif %}
-
                 </nav>
+                
                 
                 <!-- Menú principal y otros elementos de cabecera -->
                 {% block header %}
                     <!-- Aquí incluyes tu menú, formularios o enlaces adicionales -->
+                    {% include "estructura/perfil.html" %}
                     {% include "estructura/menu.html" %}
                     {% include "estructura/formularios.html" %}
                 {% endblock %}

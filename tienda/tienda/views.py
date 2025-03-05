@@ -134,6 +134,8 @@ def ordenes_listar_api(request):
         response.raise_for_status()
 
         ordenes = response.json()
+        print(f"📥 Datos recibidos en Cliente-API: {ordenes}")  # 🔹 Verificar qué datos llegan al servidor
+
         if not isinstance(ordenes, list):
             raise ValueError("La API no devolvió una lista de órdenes")
 
@@ -384,7 +386,7 @@ def crear_producto(request):
 def crear_orden(request):
     if request.method == "POST":
         try:
-            formulario = OrdenForm(request.POST, request.FILES)  # ✅ Se añade request.FILES para manejar archivos
+            formulario = OrdenForm(request.POST, request.FILES)
 
             headers = crear_cabecera()
 
@@ -394,7 +396,8 @@ def crear_orden(request):
             datos["estado"] = request.POST.get("estado")
             datos["metodo_pago"] = request.POST.get("metodo_pago")
 
-            # ✅ Manejo del archivo adjunto
+            print(f"📤 Datos enviados a API-REST desde Cliente-API: {datos}")  # 🔹 Verificar qué se está enviando
+
             files = request.FILES.get("archivo_adjunto", None)
             files_payload = {"archivo_adjunto": (files.name, files.read(), files.content_type)} if files else None
 
@@ -402,8 +405,10 @@ def crear_orden(request):
                 BASE_API_URL + version + 'ordenes/crear/',
                 headers=headers,
                 data=datos,
-                files=files_payload  # ✅ Se agrega el archivo al envío
+                files=files_payload
             )
+
+            print(f"📥 Respuesta de API-REST en Cliente-API: {response.json()}")  # 🔹 Verificar respuesta
 
             if response.status_code == requests.codes.ok:
                 messages.success(request, response.json())
@@ -412,12 +417,14 @@ def crear_orden(request):
                 return manejar_errores_api(response, request, formulario, "formularios/Orden/crear_orden.html")
 
         except Exception as err:
+            print(f"⚠️ Error inesperado en Cliente-API: {repr(err)}")
             return manejar_excepciones_api(err, request)
 
     else:
         formulario = OrdenForm(None)
 
     return render(request, 'formularios/Orden/crear_orden.html', {"formulario": formulario})
+
 
 
 def crear_proveedor(request):
@@ -1246,33 +1253,40 @@ def registrar_usuario(request):
     return render(request, 'registro/signup.html', {'formulario': formulario})
 
 
+
 def login(request):
-    if (request.method == "POST"):
+    if request.method == "POST":
         formulario = LoginForm(request.POST)
         try:
+            # Obtener el token de sesión
             token_acceso = helper.obtener_token_session(
-                                formulario.data.get("usuario"),
-                                formulario.data.get("password")
-                            )
+                formulario.data.get("usuario"),
+                formulario.data.get("password")
+            )
             request.session["token"] = token_acceso
-            
-          
-            headers = {'Authorization': 'Bearer '+token_acceso} 
-            response = requests.get(BASE_API_URL + version + 'usuario/token/' + token_acceso,headers=headers)
-            usuario = response.json()
-            request.session["usuario"] = usuario
-            
-            return  redirect("index")
+
+            # Obtener datos del usuario con el token
+            headers = {"Authorization": f"Bearer {token_acceso}"}
+            response = requests.get(BASE_API_URL + version + "usuario/token/" + token_acceso, headers=headers)
+            usuario = response.json()  # Asumiendo que devuelve un diccionario con datos del usuario
+
+            # Almacenar información del usuario en la sesión
+            request.session["usuario"] = usuario  # Guarda todo el objeto por si lo necesitas después
+            request.session["nombre_usuario"] = usuario.get("nombre", "Usuario")
+            request.session["rol"] = usuario.get("rol", "Cliente")
+            request.session["fecha_inicio"] = usuario.get("fecha_inicio", "N/A")
+            request.session["productos_favoritos"] = usuario.get("productos_favoritos", [])
+
+            return redirect("index")
         except Exception as excepcion:
-            print(f'Hubo un error en la petición: {excepcion}')
-            formulario.add_error("usuario",excepcion)
-            formulario.add_error("password",excepcion)
-            return render(request, 
-                            'registro/login.html',
-                            {"form":formulario})
-    else:  
+            print(f"Hubo un error en la petición: {excepcion}")
+            formulario.add_error("usuario", excepcion)
+            formulario.add_error("password", excepcion)
+            return render(request, "registro/login.html", {"form": formulario})
+    else:
         formulario = LoginForm()
-    return render(request, 'registro/login.html', {'form': formulario})
+    return render(request, "registro/login.html", {"form": formulario})
+
 
 
 def logout(request):

@@ -1,0 +1,19 @@
+{% load static %}
+<div class="perfil-botones d-flex gap-2 align-items-center">
+    {% if user.is_authenticated %}
+        <div class="user-info">
+            <span><strong>Usuario:</strong> {{ request.session.nombre_usuario }}</span>
+            <span><strong>Rol:</strong> {{ request.session.rol }}</span>
+        </div>
+        <a href="{% url 'logout' %}" class="btn btn-danger">
+            <i class="fa-solid fa-sign-out-alt"></i> Cerrar sesión
+        </a>
+    {% else %}
+        <a href="{% url 'login' %}" class="btn btn-primary">
+            <i class="fa-solid fa-sign-in-alt"></i> Iniciar sesión
+        </a>
+        <a href="{% url 'registrar' %}" class="btn btn-success">
+            <i class="fa-solid fa-user-plus"></i> Registrarse
+        </a>
+    {% endif %}
+</div>
